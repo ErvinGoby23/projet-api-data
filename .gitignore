@@ -1,0 +1,5 @@
+# fichiers à ignorer
+.env
+.venv/
+__pycache__/
+*.pyc
