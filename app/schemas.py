@@ -1,24 +1,29 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional, Any, List, Literal
+from typing import Optional, List, Literal
+
 
 # Transactions
-class TransactionCreate(BaseModel):
-    timestamp: datetime
+class TransactionBase(BaseModel):
+    timestamp: Optional[datetime] = None
     amount: float
     currency: str
     merchant: str
     category: Optional[str] = None
     user_id: Optional[str] = None
-    meta: Optional[dict] = None  # <- au lieu de "metadata"
+    meta: Optional[dict] = None
 
-class TransactionRead(TransactionCreate):
+class TransactionCreate(TransactionBase):
+    timestamp: datetime   # obligatoire à la création
+
+class TransactionRead(TransactionBase):
     id: int
     class Config:
         from_attributes = True
 
+
 # Rail events
-RailEventType = Literal["ARRIVAL","DEPARTURE","DELAY","CANCEL"]
+RailEventType = Literal["ARRIVAL", "DEPARTURE", "DELAY", "CANCEL"]
 
 class RailEventCreate(BaseModel):
     event_time: datetime
@@ -30,11 +35,13 @@ class RailEventCreate(BaseModel):
 
 class RailEventRead(RailEventCreate):
     id: int
-    class Config: from_attributes = True
+    class Config:
+        from_attributes = True
+
 
 # Pagination helper
 class Page(BaseModel):
-    items: list
+    items: List[TransactionRead]
     total: int
     page: int
     size: int

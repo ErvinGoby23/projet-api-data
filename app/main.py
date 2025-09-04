@@ -12,3 +12,4 @@ app.include_router(transactions.router)
 @app.get("/health")
 def health():
     return {"status": "ok"}
+

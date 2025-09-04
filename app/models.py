@@ -1,6 +1,10 @@
 from sqlalchemy import Column, Integer, String, DateTime, DECIMAL, JSON, Enum
-from .db import Base
+from .db import Base, engine
 import enum
+
+print("🔨 Création des tables…")
+Base.metadata.create_all(bind=engine)
+print("✅ Tables créées")
 
 class RailEventType(str, enum.Enum):
     ARRIVAL="ARRIVAL"; DEPARTURE="DEPARTURE"; DELAY="DELAY"; CANCEL="CANCEL"
